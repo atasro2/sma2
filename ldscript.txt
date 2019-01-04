@@ -1,0 +1,35 @@
+OUTPUT_ARCH(arm)
+SECTIONS
+{
+    . = 0x02000000;
+    EWRAM (NOLOAD) :
+    ALIGN(4)
+    {
+        INCLUDE "sym_ewram.txt"
+    }
+
+    . = 0x03000000;
+    IWRAM (NOLOAD) :
+    ALIGN(4)
+    {
+        INCLUDE "sym_iwram.txt"
+    }
+    
+	. = 0x08000000;
+    ROM :
+	ALIGN(4)
+	{
+		build/sma2/asm/crt0.o(.text);
+        build/sma2/asm/code.o(.text);
+
+        /* Data */
+        build/sma2/data/data.o(.data);
+
+	} = 0
+
+    /* Discard everything not specifically mentioned above. */
+    /DISCARD/ :
+    {
+        *(*);
+    }
+}
